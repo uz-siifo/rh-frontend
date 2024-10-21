@@ -1,17 +1,16 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './global.css'
-import LoginSignUp from './pages/Login'
-import Admin from './pages/AdminPanel/Admin'
-function App() {
+import { ChakraProvider } from '@chakra-ui/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes'; // Importando as rotas
+import './global.css'; // Estilos globais
 
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginSignUp />} /> {/* Página de Login */}
-        <Route path="/admin" element={<Admin />} /> {/* Página de Admin */}
-      </Routes>
-    </Router>
+    <ChakraProvider>
+      <Router>
+        <AppRoutes /> {/* Usando o componente AppRoutes que contém as rotas */}
+      </Router>
+    </ChakraProvider>
   );
 }
 
-export default App
+export default App;
