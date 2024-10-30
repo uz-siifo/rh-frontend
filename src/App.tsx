@@ -1,15 +1,17 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { AuthProvider } from './Contexts/AuthoContexts';
 import { BrowserRouter as Router } from 'react-router-dom';
-import AppRoutes from './routes'; // Importando as rotas
-import './global.css'; // Estilos globais
+import { ChakraProvider } from '@chakra-ui/react';
+import AppRoutes from './routes';
 
 function App() {
   return (
-    <ChakraProvider>
-      <Router>
-        <AppRoutes /> {/* Usando o componente AppRoutes que contém as rotas */}
-      </Router>
-    </ChakraProvider>
+    <Router>
+      <ChakraProvider>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </ChakraProvider>
+    </Router>
   );
 }
 

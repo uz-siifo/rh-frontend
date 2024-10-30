@@ -1,19 +1,26 @@
 import React from 'react';
-import { Box, Heading, Badge,Flex } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Badge,
+  Flex,
+} from '@chakra-ui/react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
-type EmployeePerformanceProps = {
-  data: { name: string; value: number; color: string }[];
-};
+const employeePerformance = [
+  { name: 'Excelente', value: 60, color: '#5D5FEF' },
+  { name: 'Bom', value: 30, color: '#A2A5FC' },
+  { name: 'Regular', value: 10, color: '#E6E6FF' },
+];
 
-const EmployeePerformance: React.FC<EmployeePerformanceProps> = ({ data }) => {
+const EmployeePerformanceCard: React.FC = () => {
   return (
-    <Box bg="white" borderRadius="xl" p={6} boxShadow="md">
+    <Box bg="white" borderRadius="xl" p={6} boxShadow="md" transition="all 0.3s" _hover={{ boxShadow: "xl" }}>
       <Heading size="md" mb={4} color="brand.600">Desempenho dos Funcionários</Heading>
       <ResponsiveContainer width="100%" height={200}>
         <PieChart>
           <Pie
-            data={data}
+            data={employeePerformance}
             cx="50%"
             cy="50%"
             innerRadius={60}
@@ -21,14 +28,14 @@ const EmployeePerformance: React.FC<EmployeePerformanceProps> = ({ data }) => {
             paddingAngle={5}
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {employeePerformance.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
         </PieChart>
       </ResponsiveContainer>
       <Flex justify="center" mt={4}>
-        {data.map((entry) => (
+        {employeePerformance.map((entry) => (
           <Badge key={entry.name} colorScheme="brand" variant="subtle" mr={2}>
             {entry.name}: {entry.value}%
           </Badge>
@@ -38,4 +45,4 @@ const EmployeePerformance: React.FC<EmployeePerformanceProps> = ({ data }) => {
   );
 };
 
-export default EmployeePerformance;
+export default EmployeePerformanceCard;

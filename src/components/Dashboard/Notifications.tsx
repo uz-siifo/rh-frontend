@@ -1,23 +1,35 @@
 import React from 'react';
-import { Box, Heading, List, ListItem, ListIcon } from '@chakra-ui/react';
-import { MdNotifications } from 'react-icons/md';
+import {
+  Box,
+  Heading,
+  List,
+  ListItem,
+  useColorModeValue,
+  ListIcon,  
+} from '@chakra-ui/react';
 
-const Notifications: React.FC = () => {
+import {
+  MdNotifications,
+} from 'react-icons/md';
+
+const NotificationsCard: React.FC = () => {
+  const cardBg = useColorModeValue('white', 'gray.800');
+
   return (
-    <Box bg="white" borderRadius="xl" p={6} boxShadow="md">
-      <Heading size="md" mb={4} color="brand.600">Notificações</Heading>
-      <List spacing={3}>
-        <ListItem>
-          <ListIcon as={MdNotifications} color="blue.500" />
-          Reunião agendada para amanhã às 10h.
-        </ListItem>
-        <ListItem>
-          <ListIcon as={MdNotifications} color="blue.500" />
-          Prazo para entrega do relatório: Sexta-feira.
-        </ListItem>
-      </List>
-    </Box>
-  );
+    <Box bg={cardBg} borderRadius="xl" p={6} boxShadow="md" transition="all 0.3s" _hover={{ boxShadow: "xl" }}>
+    <Heading size="md" mb={4} color="brand.600">Notificações</Heading>
+    <List spacing={3}>
+      <ListItem>
+        <ListIcon as={MdNotifications} color="blue.500" />
+        Avaliação de desempenho próxima
+      </ListItem>
+      <ListItem>
+        <ListIcon as={MdNotifications} color="blue.500" />
+        Férias de João Costa em breve
+      </ListItem>
+    </List>
+  </Box>
+);
 };
 
-export default Notifications;
+export default NotificationsCard;

@@ -38,7 +38,7 @@ const Sidebar = () => (
     <VStack spacing={1} align="stretch">
       {[
         { icon: Home, label: 'Dashboard', path: '/AdminDashboard' }, // Corrigido
-        { icon: Users, label: 'Funcionários', path: '/AdminDashboard/Employees' },
+        { icon: Users, label: 'Funcionários', path: 'Employees' },
         { icon: FileText, label: 'Avaliações', path: 'performance-evaluation' },
         { icon: Award, label: 'Promoções', path: 'promotion' },
         { icon: Clock, label: 'Presença', path: 'attendance' },
@@ -178,7 +178,7 @@ const AdminDashboard: React.FC = () => {
     <Flex direction="column" h="100vh">
       <Header />
       <Flex flex={1} overflow="hidden">
-        <Box display={{ base: 'none', md: 'block' }} w={64}>
+        <Box display={{ base: 'none', md: 'block' }} w={30}>
           <Sidebar />
         </Box>
         <Box flex={1} p={8} ml={{ base: 0, md: 64 }} overflow="auto">
