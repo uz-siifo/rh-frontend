@@ -4,6 +4,7 @@ export type UserRole = 'admin' | 'user';
 export interface User {
   id: string;
   email: string;
+  username: string;
   name: string;
   role: UserRole;
 }
@@ -16,7 +17,7 @@ export interface AuthState {
 }
 
 export interface LoginCredentials {
-  email: string;
+  username: string;
   password: string;
 }
 

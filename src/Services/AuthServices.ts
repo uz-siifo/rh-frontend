@@ -1,40 +1,62 @@
 // src/services/authService.ts
 import { LoginCredentials, LoginResponse } from '../Types/auth';
 
+
 export class AuthService {
-  private static API_URL = 'sua-api-url/auth';
+  private static API_URL = 'http://localhost:8000';
 
   static async login(credentials: LoginCredentials): Promise<LoginResponse> {
+    if (!credentials.username || !credentials.password) {
+      throw new Error('Email e senha são obrigatórios');
+    }
+
     try {
-      // Em produção, isso seria uma chamada real à API
-      const isAdmin = credentials.email.includes('admin');
-      
-      if (!credentials.email || !credentials.password) {
-        throw new Error('Email e senha são obrigatórios');
+      // Chamada ao endpoint de login do backend
+      const response = await fetch(`${this.API_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          username: credentials.username, // substituímos "email" por "username"
+          password: credentials.password
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Credenciais inválidas');
       }
 
-      // Simulação de delay de rede
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const data = await response.json();
       
-      const mockResponse: LoginResponse = {
-        token: 'mock-jwt-token-' + Date.now(),
+      return {
+        token: data.token_de_acesso,
         user: {
-          id: isAdmin ? 'admin-1' : 'user-1',
-          email: credentials.email,
-          name: isAdmin ? 'Admin User' : 'Regular User',
-          role: isAdmin ? 'admin' : 'user',
-        },
+          id: data.user_id,  // Supondo que o backend retorna "user_id" no futuro, caso necessário
+          username: credentials.username,
+          name: data.name || 'Usuário',
+          email: data.email,
+          role: data.role || 'user'
+        }
       };
-
-      return mockResponse;
     } catch (error) {
-      console.error('Auth service login error:', error);
+      console.error('Erro de login no AuthService:', error);
       throw error;
     }
   }
 
-  static validateToken(token: string): boolean {
-    // Em produção, isso verificaria a validade do JWT
-    return token.startsWith('mock-jwt-token-');
+  static async validateToken(token: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.API_URL}/users/1`, { // Pode ser outra rota protegida de teste
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return response.ok; // Retorna true se o token é válido
+    } catch (error) {
+      console.error('Erro ao validar token:', error);
+      return false;
+    }
   }
 }

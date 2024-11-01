@@ -34,7 +34,7 @@ const MotionBox = motion(Box);
 
 const LoginPage: React.FC = () => {
   const [formState, setFormState] = useState<LoginCredentials & { rememberMe: boolean }>({
-    email: '',
+    username: '',
     password: '',
     rememberMe: false,
   });
@@ -47,11 +47,11 @@ const LoginPage: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Partial<LoginCredentials & { rememberMe: boolean }> = {};
     
-    if (!formState.email) {
-      newErrors.email = 'Email é obrigatório';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email)) {
-      newErrors.email = 'Email inválido';
-    }
+    // if (!formState.username) {
+    //   newErrors.username = 'username é obrigatório';
+    // } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.username)) {
+    //   newErrors.username = 'username inválido';
+    // }
     
     if (!formState.password) {
       newErrors.password = 'Senha é obrigatória';
@@ -72,7 +72,7 @@ const LoginPage: React.FC = () => {
 
     try {
       const userRole = await login({
-        email: formState.email,
+        username: formState.username,
         password: formState.password,
       });
 
@@ -87,7 +87,7 @@ const LoginPage: React.FC = () => {
         isClosable: true,
       });
 
-      formState.rememberMe ? localStorage.setItem('rememberedEmail', formState.email) : localStorage.removeItem('rememberedEmail');
+      formState.rememberMe ? localStorage.setItem('rememberedusername', formState.username) : localStorage.removeItem('rememberedusername');
 
     } catch (error) {
       const errorMessage = error instanceof Error 
@@ -168,17 +168,17 @@ const LoginPage: React.FC = () => {
                 
                 <Heading size="lg" textAlign="center">Olá! Bem-vindo</Heading>
 
-                <FormControl isInvalid={!!errors.email} isRequired>
-                  <FormLabel>Email</FormLabel>
+                <FormControl isInvalid={!!errors.username} isRequired>
+                  <FormLabel>Username</FormLabel>
                   <Input
-                    name="email"
-                    type="email"
-                    placeholder="Digite seu email"
-                    value={formState.email}
+                    name="username"
+                    type="username"
+                    placeholder="Digite seu username"
+                    value={formState.username}
                     onChange={handleInputChange}
-                    autoComplete="email"
+                    autoComplete="username"
                   />
-                  <FormErrorMessage>{errors.email}</FormErrorMessage>
+                  <FormErrorMessage>{errors.username}</FormErrorMessage>
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.password} isRequired>
@@ -220,7 +220,6 @@ const LoginPage: React.FC = () => {
                   <Button leftIcon={<FaFacebook />} variant="outline" onClick={() => toast({ title: "Em breve", description: "Login com Facebook será implementado em breve!", status: "info" })} />
                   <Button leftIcon={<FaApple />} variant="outline" onClick={() => toast({ title: "Em breve", description: "Login com Apple será implementado em breve!", status: "info" })} />
                 </HStack>
-
               </VStack>
             </form>
           </Box>
