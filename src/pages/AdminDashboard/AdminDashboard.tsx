@@ -40,8 +40,8 @@ const Sidebar = () => (
         { icon: Home, label: 'Dashboard', path: '/AdminDashboard' }, // Corrigido
         { icon: Users, label: 'Funcionários', path: 'Employees' },
         { icon: FileText, label: 'Avaliações', path: 'performance-evaluation' },
-        { icon: Award, label: 'Promoções', path: 'promotion' },
-        { icon: Clock, label: 'Presença', path: 'attendance' },
+        { icon: Award, label: 'Promoções', path: 'progressoes-promocoes' },
+        { icon: Clock, label: 'Presença', path: 'gestao-horarios' },
         { icon: Settings, label: 'Configurações', path: 'settings' },
       ].map((item, index) => (
         <Link to={item.path} key={index}>

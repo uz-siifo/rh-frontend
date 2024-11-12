@@ -30,7 +30,7 @@ const float = keyframes`
   100% { transform: translateY(0); }
 `;
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 const LoginPage: React.FC = () => {
   const [formState, setFormState] = useState<LoginCredentials & { rememberMe: boolean }>({

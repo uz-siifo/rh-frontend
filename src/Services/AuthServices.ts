@@ -3,7 +3,7 @@ import { LoginCredentials, LoginResponse } from '../Types/auth';
 
 
 export class AuthService {
-  private static API_URL = 'http://localhost:8000';
+  private static API_URL = 'https://37617ae9e9b1b61c9e233b153fe0cde5.loophole.site';
 
   static async login(credentials: LoginCredentials): Promise<LoginResponse> {
     if (!credentials.username || !credentials.password) {

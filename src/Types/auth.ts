@@ -29,8 +29,9 @@ export interface LoginResponse {
 export interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<UserRole>;
   logout: () => void;
-  isTokenValid: () => boolean;
+  isTokenValid: () => Promise<boolean>;
   isAdmin: () => boolean;
+  currentUser:User|null;
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;

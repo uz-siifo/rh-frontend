@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Table, Thead, Tbody, Tr, Th, Td, Input, Text } from '@chakra-ui/react';
+import { Box, Table, Thead, Tbody, Tr, Th, Td, Text } from '@chakra-ui/react';
 
 interface Promocao {
   id: number;
@@ -9,107 +9,52 @@ interface Promocao {
   motivo: string;
 }
 
-const Promotion: React.FC = () => {
-  const [promocoes, setPromocoes] = useState<Promocao[]>([]);
-  const [promocaoSelecionada, setPromocaoSelecionada] = useState<Promocao | null>(null);
-  const [modo, setModo] = useState<'view' | 'edit'>('view');
-  const [mensagem, setMensagem] = useState<string>('');
+interface User {
+  id: number;
+}
 
-  const handleEditClick = (promocao: Promocao) => {
-    setPromocaoSelecionada(promocao);
-    setModo('edit');
-  };
+interface PromotionProps {
+  currentUser: User | null;
+}
 
-  const handleSave = (valores: Promocao) => {
-    if (!valores.novoCargo || !valores.motivo) {
-      setMensagem('Por favor, preencha todos os campos obrigatórios.');
-      return;
-    }
+const Promotion: React.FC<PromotionProps> = ({ currentUser }) => {
+  const [promocoes] = useState<Promocao[]>([
+    // Dados de exemplo, pode substituir por dados reais vindos da API ou banco de dados
+    { id: 1, funcionarioId: 1, dataPromocao: '2023-10-01', novoCargo: 'Gerente', motivo: 'Desempenho' },
+    { id: 2, funcionarioId: 2, dataPromocao: '2023-09-15', novoCargo: 'Supervisor', motivo: 'Experiência' },
+    { id: 3, funcionarioId: 1, dataPromocao: '2022-08-10', novoCargo: 'Coordenador', motivo: 'Projeto concluído' },
+  ]);
 
-    if (promocaoSelecionada) {
-      // Atualiza a promoção selecionada
-      setPromocoes(prev => prev.map(promocao => 
-        promocao.id === promocaoSelecionada.id ? valores : promocao
-      ));
-      setMensagem('Promoção atualizada com sucesso!');
-    } else {
-      // Adiciona nova promoção
-      const novaPromocao = { ...valores, id: promocoes.length + 1, dataPromocao: new Date().toISOString() };
-      setPromocoes(prev => [...prev, novaPromocao]);
-      setMensagem('Promoção adicionada com sucesso!');
-    }
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setModo('view');
-    setPromocaoSelecionada(null);
-    setMensagem('');
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (promocaoSelecionada) {
-      const { name, value } = e.target;
-      setPromocaoSelecionada(prev => (prev ? { ...prev, [name]: value } : null));
-    }
-  };
+  // Filtra as promoções para exibir apenas as do usuário logado
+  const promocoesUsuario = promocoes.filter(promo => promo.funcionarioId === currentUser?.id);
 
   return (
     <Box p={4}>
-      <Button onClick={() => { setPromocaoSelecionada(null); setModo('edit'); }}>Iniciar Nova Promoção</Button>
-      {mensagem && <Text color="red.500" mt={2}>{mensagem}</Text>}
-      <Table variant="simple" mt={4}>
-        <Thead>
-          <Tr>
-            <Th>ID</Th>
-            <Th>Data da Promoção</Th>
-            <Th>ID Funcionário</Th>
-            <Th>Novo Cargo</Th>
-            <Th>Motivo</Th>
-            <Th>Ações</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {promocoes.map(promocao => (
-            <Tr key={promocao.id}>
-              <Td>{promocao.id}</Td>
-              <Td>{new Date(promocao.dataPromocao).toLocaleDateString()}</Td>
-              <Td>{promocao.funcionarioId}</Td>
-              <Td>{promocao.novoCargo}</Td>
-              <Td>{promocao.motivo}</Td>
-              <Td>
-                <Button onClick={() => handleEditClick(promocao)}>Editar</Button>
-              </Td>
+      <Text fontSize="xl" mb={4}>Promoções do Funcionário</Text>
+      
+      {promocoesUsuario.length === 0 ? (
+        <Text color="gray.500">Nenhuma promoção encontrada para o usuário.</Text>
+      ) : (
+        <Table variant="simple" mt={4}>
+          <Thead>
+            <Tr>
+              <Th>ID</Th>
+              <Th>Data da Promoção</Th>
+              <Th>Novo Cargo</Th>
+              <Th>Motivo</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-
-      {modo === 'edit' && (
-        <Box mt={4} borderWidth={1} borderRadius="lg" p={4}>
-          <Input 
-            name="funcionarioId" 
-            placeholder="ID Funcionário" 
-            value={promocaoSelecionada?.funcionarioId || ''} 
-            onChange={handleInputChange} 
-            mb={2}
-          />
-          <Input 
-            name="novoCargo" 
-            placeholder="Novo Cargo" 
-            value={promocaoSelecionada?.novoCargo || ''} 
-            onChange={handleInputChange} 
-            mb={2}
-          />
-          <Input 
-            name="motivo" 
-            placeholder="Motivo da Promoção" 
-            value={promocaoSelecionada?.motivo || ''} 
-            onChange={handleInputChange} 
-            mb={2}
-          />
-          <Button onClick={() => handleSave(promocaoSelecionada!)} mt={2}>Salvar Promoção</Button>
-        </Box>
+          </Thead>
+          <Tbody>
+            {promocoesUsuario.map(promocao => (
+              <Tr key={promocao.id}>
+                <Td>{promocao.id}</Td>
+                <Td>{new Date(promocao.dataPromocao).toLocaleDateString()}</Td>
+                <Td>{promocao.novoCargo}</Td>
+                <Td>{promocao.motivo}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       )}
     </Box>
   );

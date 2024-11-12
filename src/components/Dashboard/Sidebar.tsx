@@ -1,3 +1,4 @@
+// src/components/Sidebar.tsx
 import React from 'react';
 import {
   Box,
@@ -9,7 +10,8 @@ import {
   Avatar,
 } from '@chakra-ui/react';
 import { MdDashboard, MdTrendingUp, MdDateRange, MdAccessTime, MdPeople } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom'; // Importando useNavigate
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Contexts/AuthoContexts';
 
 type MenuItem = {
   icon: React.ElementType;
@@ -31,11 +33,12 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ selectedItem, setSelectedItem }) => {
-  const navigate = useNavigate(); // Usando o hook useNavigate
+  const navigate = useNavigate();
+  const { currentUser } = useAuth(); // Usando `currentUser` do AuthContext
 
   const handleNavigation = (item: MenuItem) => {
-    setSelectedItem(item.text); // Atualiza o item selecionado
-    navigate(item.path); // Navega para o caminho correspondente
+    setSelectedItem(item.text);
+    navigate(item.path);
   };
 
   return (
@@ -43,8 +46,8 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedItem, setSelectedItem }) => {
       <Flex align="center" mb={10}>
         <Avatar size="md" src="https://bit.ly/broken-link" mr={3} />
         <Box>
-          <Text fontWeight="bold" fontSize="lg">Nome do Usuário</Text>
-          <Text fontSize="sm" color="gray.500">Gerente de RH</Text>
+          <Text fontWeight="bold" fontSize="lg">{currentUser?.name || 'Nome do Usuário'}</Text>
+          <Text fontSize="sm" color="gray.500">{currentUser?.role || 'Cargo do Usuário'}</Text>
         </Box>
       </Flex>
       <VStack align="stretch" spacing={4}>
@@ -55,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedItem, setSelectedItem }) => {
             justifyContent="flex-start"
             variant={selectedItem === item.text ? 'solid' : 'ghost'}
             colorScheme="brand"
-            onClick={() => handleNavigation(item)} // Usando a função handleNavigation
+            onClick={() => handleNavigation(item)}
           >
             {item.text}
           </Button>

@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token && userData) {
       try {
         const user = JSON.parse(userData) as User;
-        const isValid = AuthService.validateToken(token);
+        const isValid = await AuthService.validateToken(token);
 
         if (!isValid) {
           throw new Error('Token inválido');
@@ -49,10 +49,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (credentials: LoginCredentials): Promise<UserRole> => {
     setState(prev => ({ ...prev, isLoading: true }));
-    
+
     try {
       const { token, user } = await AuthService.login(credentials);
-      
+
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 
@@ -73,23 +73,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    setState({
-      ...initialState,
-      isLoading: false,
-    });
+    setState(initialState);
   };
 
-  const isTokenValid = (): boolean => {
+  const isTokenValid = async (): Promise<boolean> => {
     const token = state.token;
-    return token ? AuthService.validateToken(token) : false;
+    return token ? await AuthService.validateToken(token) : false;
   };
 
   const isAdmin = (): boolean => {
     return state.user?.role === 'admin';
   };
 
+  // Propriedade `currentUser` adicionada
+  const currentUser = state.user;
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, isTokenValid, isAdmin }}>
+    <AuthContext.Provider value={{ 
+      ...state, 
+      login, 
+      logout, 
+      isTokenValid, 
+      isAdmin,
+      currentUser, // Incluindo currentUser aqui
+    }}>
       {children}
     </AuthContext.Provider>
   );

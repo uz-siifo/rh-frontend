@@ -1,40 +1,70 @@
+// src/components/Sidebar.tsx
 import React from 'react';
-import { Box, VStack, Button, useColorModeValue, Icon } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { Settings, FileText, Clock, Award, Users, Home } from 'lucide-react';
+import {
+  Box,
+  Flex,
+  VStack,
+  Text,
+  Button,
+  Icon,
+  Avatar,
+} from '@chakra-ui/react';
+import { MdDashboard, MdTrendingUp, MdDateRange, MdAccessTime } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Contexts/AuthoContexts';
 
-const Sidebar: React.FC = () => (
-  <Box
-    bg={useColorModeValue('gray.50', 'gray.900')}
-    w={{ base: 'full', md: 64 }}
-    pos="fixed"
-    h="full"
-    py={4}
-  >
-    <VStack spacing={1} align="stretch">
-      {[
-        { icon: Home, label: 'Dashboard', path: '/AdminDashboard' },
-        { icon: Users, label: 'Funcionários', path: 'Employees' },
-        { icon: FileText, label: 'Avaliações', path: 'performance-evaluation' },
-        { icon: Award, label: 'Promoções', path: 'promotion' },
-        { icon: Clock, label: 'Presença', path: 'attendance' },
-        { icon: Settings, label: 'Configurações', path: 'settings' },
-      ].map((item, index) => (
-        <Link to={item.path} key={index}>
+type MenuItem = {
+  icon: React.ElementType;
+  text: string;
+  path: string;
+};
+
+const sidebarItems: MenuItem[] = [
+  { icon: MdDashboard, text: 'Gestão de Desempenho', path: '/dashboard' },
+  { icon: MdTrendingUp, text: 'Progressões e Promoções', path: 'promotion' },
+  { icon: MdDateRange, text: 'Controle de Dias de Trabalho', path: 'controle-dias' },
+  { icon: MdAccessTime, text: 'Gestão de Horários', path: 'gestao-horarios' },
+];
+
+interface SidebarProps {
+  selectedItem: string;
+  setSelectedItem: (item: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ selectedItem, setSelectedItem }) => {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth(); // Usando `currentUser` do AuthContext
+
+  const handleNavigation = (item: MenuItem) => {
+    setSelectedItem(item.text);
+    navigate(item.path);
+  };
+
+  return (
+    <Box w="300px" bg="white" boxShadow="lg" p={5}>
+      <Flex align="center" mb={10}>
+        <Avatar size="md" src="https://bit.ly/broken-link" mr={3} />
+        <Box>
+          <Text fontWeight="bold" fontSize="lg">{currentUser?.name || 'Nome do Usuário'}</Text>
+          <Text fontSize="sm" color="gray.500">{currentUser?.role || 'Cargo do Usuário'}</Text>
+        </Box>
+      </Flex>
+      <VStack align="stretch" spacing={4}>
+        {sidebarItems.map((item) => (
           <Button
+            key={item.text}
             leftIcon={<Icon as={item.icon} />}
             justifyContent="flex-start"
-            variant="ghost"
-            size="lg"
-            w="full"
-            pl={8}
+            variant={selectedItem === item.text ? 'solid' : 'ghost'}
+            colorScheme="brand"
+            onClick={() => handleNavigation(item)}
           >
-            {item.label}
+            {item.text}
           </Button>
-        </Link>
-      ))}
-    </VStack>
-  </Box>
-);
+        ))}
+      </VStack>
+    </Box>
+  );
+};
 
 export default Sidebar;
